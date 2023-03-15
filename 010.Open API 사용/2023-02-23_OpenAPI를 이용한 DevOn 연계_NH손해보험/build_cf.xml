@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="EUC-KR"?>
+
+<project name="ChangeFlowRestClient" default="all" basedir="./">
+	
+    <!-- =============================================== -->
+    <!--                                                										-->
+    <!-- Change Flow Build initialize                    								-->
+    <!--                                                										-->
+    <!-- =============================================== -->
+    <target name="init">
+        <!-- General config -->
+        <tstamp />
+        <property environment="env" />
+        <property file="${basedir}/build_cf.properties" />
+		
+    	<!-- Paths -->
+    	        <path id="project.class.path">
+    	   			<fileset dir="${basedir}/../lib" includes="**/**.jar" />
+    	        </path>
+    </target>
+	
+    <!-- =============================================== -->
+    <!--                                                										-->
+    <!-- All Target                                     									-->
+    <!--                                                										-->
+    <!-- =============================================== -->
+    <target name="all">
+        <!--antcall target="clean" />
+    	<antcall target="compile" /--> 
+        <antcall target="jar" />
+    </target>
+
+    <target name="clean" depends="init">
+        <echo>+ ===================================================== +</echo>
+        <echo>+ +</echo>
+        <echo>+ Cleaning +</echo>
+        <echo>+ +</echo>
+        <echo>+ ===================================================== +</echo>
+    	<delete>
+    		<fileset dir="${build.dir}" />
+    	</delete>
+    </target>
+	
+    <!-- =============================================== -->
+    <!--                                                										-->
+    <!-- Compile                                        									-->
+    <!--                                                										-->
+    <!-- =============================================== -->
+    <target name="compile" depends="init">
+        <echo>+ ===================================================== +</echo>
+        <echo>+ +</echo>
+        <echo>+ Compiling +</echo>
+        <echo>+ +</echo>
+        <echo>+ ===================================================== +</echo>
+        
+        <javac destdir="${build.dir}" debug="on" encoding="utf-8"
+			deprecation="${compiler.deprecation}" compiler="${compiler.type}" 
+			classpathref="project.class.path" debuglevel = "source,lines,vars">
+            <src path="${java.dir}" />
+        	<exclude name="**/test/**.java" />
+        </javac>
+    </target>
+	
+    <!-- =============================================== -->
+    <!--                                                										-->
+    <!-- JAR (ChangeFlow.jar)                           								-->
+    <!--                                                										-->
+    <!-- =============================================== -->
+    <target name="jar" depends="init">
+    	<echo>+ ===================================================== +</echo>
+        <echo>+ +</echo>
+        <echo>+ Building CFRestClient.jar files +</echo>
+        <echo>+ +</echo>
+        <echo>+ ===================================================== +</echo>
+        
+        <delete>
+            <fileset dir="${dist.dir}" includes="${jar.name}" />
+        </delete>
+    	
+    	<!--copy file="${java.dir}/version.txt" todir="${build.dir}"></copy-->
+    	
+    	<jar basedir="${build.dir}" excludes="**" 
+			jarfile="${dist.dir}/${jar.name}" >
+            <fileset dir="${build.dir}">
+            	<exclude name="**/test/**/*" />
+            </fileset>
+    		<manifest>
+    		    <attribute name="Built-By" value="${user.name}"/>
+    		    <attribute name="Implementation-Vendor" value="GTONE inc."/>
+    		    <attribute name="Implementation-Title" value="${app.name}"/>
+    		    <attribute name="Implementation-Version" value="${jar.version}"/>
+    		</manifest>
+        </jar>
+       
+    </target>
+	
+	
+	
+</project>

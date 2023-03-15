@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WF_site">
+	<select id="site_rest_getUserByLoginId" parameterType="hashMap" resultType="ExpressMap">
+		SELECT * FROM C_USER WHERE LOGIN_ID = #{LOGIN_ID} AND DEL_YN != 'Y' AND ACTIVE_YN != 'N'
+	</select>
+	
+	<select id="site_rest_getCollectIdByCollectName" parameterType="hashMap" resultType="ExpressMap">
+		SELECT * FROM CF_COLLECT_INFO WHERE COLLECT_NAME = #{COLLECT_NAME} AND USE_YN != 'N'
+	</select>
+	
+	<select id="site_rest_getdoclist" parameterType="hashMap" resultType="ExpressMap">
+		SELECT
+			  REQ.INST_ID
+			, REQ.CHANGE_TITLE
+			, BIZ.BIZ_NM
+			, V_STANDBY.ACT_NAME
+		FROM
+			  V_WF_STANDBY V_STANDBY
+			, CF_USER_REQUEST REQ
+			  LEFT OUTER JOIN
+			  C_BIZ BIZ
+				ON REQ.BIZ_ID = BIZ.BIZ_ID
+				<if test="BIZ_CD != null and BIZ_CD != ''">
+				   AND BIZ.BIZ_CD = #{BIZ_CD}
+				</if>
+			<if test="STEP_TYPE != null and STEP_TYPE != ''">
+			, WF_ACT_ATTR ACT_ATTR
+			, WF_ACT_ATTR_CONF ACT_ATTR_CONF
+			</if>
+			<if test="LOGIN_ID != null and LOGIN_ID != ''">
+			, C_USER USR_PTCP
+			</if>
+		WHERE
+				V_STANDBY.INST_ID = REQ.INST_ID
+			<if test="STEP_TYPE != null and STEP_TYPE != ''">
+			AND V_STANDBY.ACT_ID = ACT_ATTR.ACT_ID
+			AND ACT_ATTR.ACT_ATTR_CONF_ID = ACT_ATTR_CONF.ACT_ATTR_CONF_ID
+			AND ACT_ATTR_CONF.ACT_ATTR_NAME = 'STEP_TYPE'
+			AND ACT_ATTR.ACT_ATTR_VALUE = #{STEP_TYPE}
+			</if>
+			<if test="LOGIN_ID != null and LOGIN_ID != ''">
+			AND V_STANDBY.PARTICIPANT_ID = USR_PTCP.USER_ID
+			AND USR_PTCP.LOGIN_ID = #{LOGIN_ID}
+			</if>
+		ORDER BY
+			REQ.INST_ID ASC
+	</select>
+</mapper>

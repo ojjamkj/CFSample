@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="HR_site">
+
+	<!-- HR 부서 조회 -->
+	<select id="SiteUserDeptBatch_HR_getDepts" parameterType="hashMap" resultType="ExpressMap">
+SELECT
+  DEPT_ID,
+  PARENT_ID,
+  DEPT_NM
+FROM
+  HR_DEPT
+	</select>
+	<!-- CF 부서 삭제 상태로 update, 자체 생성은 대상 제외-->
+	<update id="SiteUserDeptBatch_CF_updateDeptDelY" parameterType="hashMap">
+UPDATE
+  C_DEP_INFO
+SET
+  DEL_YN='Y'
+WHERE
+  DEP_CD IS NOT NULL
+	</update>
+	<!-- CF 부서 update -->
+	<update id="SiteUserDeptBatch_CF_updateDept" parameterType="hashMap">
+UPDATE
+  C_DEP_INFO
+SET
+  DEP_TITLE=#{DEP_TITLE},
+  DISPLAY_ORDER=#{DISPLAY_ORDER, jdbcType=NUMERIC},
+  UPD_ID=#{UPD_ID},
+  UPD_DT=#{UPD_DT},
+  DEL_YN='N'
+WHERE
+  DEP_CD=#{DEP_CD}
+	</update>
+	<!-- CF 부서 insert -->
+	<insert id="SiteUserDeptBatch_CF_insertDept" parameterType="hashMap">
+INSERT INTO
+  C_DEP_INFO
+(
+  DEP_ID,
+  DEP_TITLE,
+  DEP_TP_CD,
+  DISPLAY_DEPTH,
+  DISPLAY_ORDER,
+  CRE_ID,
+  CRE_DT,
+  UPD_ID,
+  UPD_DT,
+  DEP_CD,
+  DEL_YN
+)
+VALUES
+(
+  C_DEP_INFO_SEQ.NEXTVAL,
+  #{DEP_TITLE},
+  #{DEP_TP_CD},
+  #{DISPLAY_DEPTH, jdbcType=NUMERIC},
+  #{DISPLAY_ORDER, jdbcType=NUMERIC},
+  #{CRE_ID},
+  #{CRE_DT},
+  #{UPD_ID},
+  #{UPD_DT},
+  #{DEP_CD},
+  #{DEL_YN}
+)
+	</insert>
+	
+	<update id="SiteUserDeptBatch_CF_updateParDept" parameterType="hashMap">
+UPDATE
+  C_DEP_INFO
+SET
+  PAR_DEP_ID=
+    CASE WHEN #{PAR_DEP_CD} IS NOT NULL
+    THEN (
+      SELECT SUB.DEP_ID
+      FROM (
+        SELECT DEP_ID, ROW_NUMBER() OVER(ORDER BY DEP_ID) AS RN
+        FROM C_DEP_INFO
+        WHERE DEP_CD=#{PAR_DEP_CD} ) SUB
+      WHERE SUB.RN=1 )
+    ELSE 0
+    END
+WHERE DEP_CD=#{DEP_CD}
+	</update>
+	
+	<!-- HR 직급 조회 -->
+	<select id="SiteUserDeptBatch_HR_selectPositions" parameterType="hashMap" resultType="ExpressMap">
+SELECT
+  DISTINCT a.POS_NM
+FROM
+  HR_EMP a
+WHERE
+  a.POS_NM IS NOT NULL
+	</select>
+	<!-- CF 직급 조회 -->
+	<select id="SiteUserDeptBatch_CF_selectPosition" parameterType="hashMap" resultType="ExpressMap">
+SELECT
+  a.CD_ID
+FROM
+  C_CD a
+WHERE
+  a.CD_GRP_ID='2100'
+  AND a.CD_ID=#{CD_ID}
+	</select>
+	<!-- CF 직급 insert -->
+	<insert id="SiteUserDeptBatch_CF_insertPosition" parameterType="hashMap">
+INSERT INTO C_CD (CD_ID, CD_DESC, DISPLAY_ORDER, CD_ETC, DEL_YN, CD_GRP_ID)
+VALUES (#{CD_ID}, #{CD_DESC}, null, null, 'N', '2100')
+	</insert>
+	<!-- CF 직급명 insert -->
+	<insert id="SiteUserDeptBatch_CF_insertPositionNm" parameterType="hashMap">
+INSERT INTO C_CD_NM (CD_ID, LANG_CD, DISPLAY_NM)
+VALUES (#{CD_ID}, 'ko-KR', #{DISPLAY_NM})
+	</insert>
+	
+	<!-- HR 사용자 조회 -->
+	<select id="SiteUserDeptBatch_HR_getUsers" parameterType="hashMap" resultType="ExpressMap">
+SELECT
+  EMP_ID,
+  EMP_NM,
+  POS_NM,
+  DEPT_ID,
+  EMAIL,
+  PHONE,
+  DUTY_YN
+FROM
+  HR_EMP
+	</select>
+	<!-- CF 사용자 update -->
+	<update id="SiteUserDeptBatch_CF_updateUser" parameterType="hashMap">
+UPDATE
+  C_USER
+SET
+  POSITION_CODE=#{POSITION_CODE},
+  USER_NM=#{USER_NM},
+  EMAIL=#{EMAIL},
+  CELL_PHONE=#{CELL_PHONE},
+  DEL_YN=#{DEL_YN}
+WHERE
+  LOGIN_ID=#{LOGIN_ID}
+	</update>
+	<!-- CF 사용자 insert -->
+	<insert id="SiteUserDeptBatch_CF_insertUser" parameterType="hashMap">
+INSERT INTO 
+  C_USER
+(
+  USER_ID,
+  DEP_ID,
+  POSITION_CODE,
+  USER_NM,
+  LOGIN_ID,
+  USER_PWD,
+  EMAIL,
+  CELL_PHONE,
+  ACTIVE_YN,
+  PWD_FAIL_COUNT,
+  CRE_ID,
+  CRE_DT,
+  UPD_ID,
+  UPD_DT,
+  DEL_YN
+)
+VALUES
+(
+  C_USER_SEQ.NEXTVAL,
+  (SELECT DEP_ID FROM C_DEP_INFO WHERE DEP_CD=#{DEP_CD}),
+  #{POSITION_CODE},
+  #{USER_NM},
+  #{LOGIN_ID},
+  #{USER_PWD},
+  #{EMAIL},
+  #{CELL_PHONE},
+  #{ACTIVE_YN},
+  #{PWD_FAIL_COUNT},
+  #{CRE_ID},
+  #{CRE_DT},
+  #{UPD_ID},
+  #{UPD_DT},
+  #{DEL_YN}
+)
+	</insert>
+	<!-- CF 사용자 기본 권한 insert -->
+	<insert id="SiteUserDeptBatch_CF_insertDefaultGroupRole" parameterType="hashMap">
+INSERT INTO 
+  C_USER_GROUP_ROLE
+(
+  USER_ID,
+  GROUP_ID,
+  ROLE_ID,
+  CRE_ID,
+  CRE_DT
+)
+VALUES
+(
+  (SELECT USER_ID FROM C_USER WHERE LOGIN_ID=#{LOGIN_ID}),
+  #{GROUP_ID},
+  #{ROLE_ID},
+  #{CRE_ID},
+  #{CRE_DT}
+)
+	</insert>
+	<!-- CF 사용자 기본 권한 hist insert -->
+	<insert id="SiteUserDeptBatch_CF_insertDefaultGroupRoleHist" parameterType="hashMap">
+INSERT INTO 
+  C_USER_GROUP_ROLE_HIST
+(
+  USER_ID,
+  GROUP_ID,
+  ROLE_ID,
+  CRE_ID,
+  CRE_DT
+)
+VALUES
+(
+  (SELECT USER_ID FROM C_USER WHERE LOGIN_ID=#{LOGIN_ID}),
+  #{GROUP_ID},
+  #{ROLE_ID},
+  #{CRE_ID},
+  #{CRE_DT}
+)
+	</insert>
+
+</mapper>

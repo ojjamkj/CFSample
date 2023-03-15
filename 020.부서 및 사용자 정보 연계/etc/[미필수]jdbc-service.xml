@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="euc-kr"?>
+
+<!DOCTYPE jdbc-service SYSTEM "jdbc-service.dtd">
+
+	<jdbc-service verbose="true" defaultElement="jSpeedDataSource">
+
+		<jdbc-service-config name="CMDataSource" deploy="true" loadOnStartup="100" verbose="true" lastModified="1203003937656" target="all.web">
+			<log-type>ONLY_LOG4J</log-type>
+			<log-level>DEBUG</log-level>
+			<log-location></log-location>
+			<conn-handler>jspeed.base.jdbc.DataSourceConnectionHandler</conn-handler>
+			<limit-time>100</limit-time>
+			<limit-row>100</limit-row>
+			<conn-param>
+				<param-name>jndi-name</param-name>
+				<param-value>CMDataSource</param-value>
+			</conn-param>
+		</jdbc-service-config>
+		
+		<jdbc-service-config name="ITPDataSource" deploy="true" loadOnStartup="100" verbose="true" lastModified="1203003937656" target="all.web">
+			<log-type>ONLY_LOG4J</log-type>
+			<log-level>DEBUG</log-level>
+			<log-location></log-location>
+			<conn-handler>jspeed.base.jdbc.DataSourceConnectionHandler</conn-handler>
+			<limit-time>100</limit-time>
+			<limit-row>100</limit-row>
+			<conn-param>
+				<param-name>jndi-name</param-name>
+				<param-value>ITPDataSource</param-value>
+			</conn-param>
+		</jdbc-service-config>
+
+		<jdbc-service-config name="jSpeedDataSource" deploy="true" loadOnStartup="100" verbose="true" monitor="true" lastModified="1092962889316" target="all.web">
+			<log-type>ONLY_LOG4J</log-type>
+			<log-level>DEBUG</log-level>
+			<log-location></log-location>
+			<conn-handler>jspeed.base.jdbc.DataSourceConnectionHandler</conn-handler>
+			<limit-time>100</limit-time>
+			<limit-row>100</limit-row>
+			<conn-param>
+				<param-name>env</param-name>
+				<param-value>java.naming.factory.initial=weblogic.jndi.WLInitialContextFactory</param-value>
+			</conn-param>
+			<conn-param>
+				<param-name>env-separator</param-name>
+				<param-value>,</param-value>
+			</conn-param>
+			<conn-param>
+				<param-name>jndi-name</param-name>
+				<param-value>jSpeedDataSource</param-value>
+			</conn-param>
+			<description>DataSource Connection</description>
+		</jdbc-service-config>
+		
+		<!-- HR 데이터 소스 추가 -->
+		<jdbc-service-config name="HRDataSource" deploy="true" loadOnStartup="100" verbose="true" lastModified="1203003937656" target="all.web">
+			<log-type>ONLY_LOG4J</log-type>
+			<log-level>DEBUG</log-level>
+			<log-location></log-location>
+			<conn-handler>jspeed.base.jdbc.DataSourceConnectionHandler</conn-handler>
+			<limit-time>100</limit-time>
+			<limit-row>100</limit-row>
+			<conn-param>
+				<param-name>jndi-name</param-name>
+				<param-value>HRDataSource</param-value>
+			</conn-param>
+		</jdbc-service-config>
+		
+	</jdbc-service>

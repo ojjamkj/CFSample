@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//ibatis.apache.org//DTD Config 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-config.dtd">
+<configuration>
+ <typeAliases>
+<typeAlias alias="ExpressMap" type="com.gtone.express.server.dao.ExpressMap"/> 
+</typeAliases>
+<environments default="development">
+<environment id="development">
+<transactionManager type="JDBC"/>
+<dataSource type="JNDI">
+<property name="data_source" value="java:comp/env/jdbc/ITPDataSource"/>
+</dataSource>
+
+</environment>
+
+</environments>
+
+
+<mappers>
+<mapper resource="WF.xml"/> 
+<mapper resource="CF.xml"/>
+<mapper resource="WF_EXT.xml"/>
+<mapper resource="WF_MIG.xml"/>
+<mapper resource="CFAdmin.xml"/>
+<mapper resource="CFReport.xml"/>
+<!-- 사이트용 쿼리  -->
+<mapper resource="WF_site.xml"/>
+<mapper resource="CF_site.xml"/>
+<mapper resource="CFReport_site.xml"/>
+<mapper resource="HR_site.xml"/>
+</mappers>
+</configuration>
