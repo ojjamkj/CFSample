@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+        <setting name="jdbcTypeForNull" value="NULL" />
+        <setting name="returnInstanceForEmptyRow" value="true"/><!--조회된 모든 컬럼이 널일 경우 널 대신 빈row를 리턴하도록 처리 -->
+        <setting name="callSettersOnNulls" value="true" /><!-- false일 경우 조회된 칼럼의 모든 row가 널일경우 결과에 아예 없음 -->
+    </settings>
+	<typeAliases>
+		<typeAlias alias="ExpressMap" type="com.gtone.express.server.dao.ExpressMap"/> 
+	</typeAliases>
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC"/>
+			<dataSource type="JNDI">
+				<property name="data_source" value="java:comp/env/jdbc/TestDataSource"/>
+			</dataSource>
+		</environment>
+	</environments>
+	<databaseIdProvider type="DB_VENDOR">
+	  <property name="Oracle" value="oracle" />
+	  <property name="Tibero" value="oracle" />
+	  <property name="PostgreSQL" value="postgresql" />
+	</databaseIdProvider>	
+	<mappers>
+		<mapper resource="Test.xml"/>
+	</mappers>
+</configuration>
