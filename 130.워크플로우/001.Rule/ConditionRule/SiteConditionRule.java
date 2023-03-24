@@ -9,7 +9,8 @@ public class SiteConditionRule extends DefaultConditionRule {
 
 	@Override
 	public boolean checkRule(WSParam params) throws Exception {
-
+		String instId = params.getParameter("INST_ID");
+		
 		//기본 DB가 아닌 다른 DB를 접속하기 위해
 		/* 1. 다른 DB의 데이터소스명은 WAS의 데이터 소스에 바인드 되어 있어야합니다. 
 		 * 2. 구성하는 방법
