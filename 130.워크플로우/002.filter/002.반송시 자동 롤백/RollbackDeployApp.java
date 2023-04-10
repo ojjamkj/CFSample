@@ -35,9 +35,15 @@ public class RollbackDeployApp implements IApplication {
 			inHash.put(ICFConstants.SYS_TYPE, "S");
 			List<HashMap> deployList = DeployService.getInstance().findDeployByInstIdNSysType(inHash);
 			
+			DeployBatchService batchService = DeployBatchService.getInstance();
 			for(HashMap map : deployList)
 			{
 				String deployId = (String)map.get(ICFConstants.DEPLOY_ID);
+				
+				//이미 걸린 스케쥴이 있는 경우 skip. 반송을 반복적으로 하는 경우 생길문제 방지
+				if(batchService.isScheduled(batchService.getKey(deployId))) {
+					continue;
+				}
 				
 				inHash.put(ICFConstants.DEPLOY_ID, deployId);
 			
@@ -51,10 +57,9 @@ public class RollbackDeployApp implements IApplication {
 				// 배포수행 (백그라운드임)
 				DeployService.getInstance().executeDeploy(false, inHash);
 				
-				// 배포가 끝날때까지 대기
-				DeployBatchService batchService = DeployBatchService.getInstance();
-				while (batchService.isScheduled(batchService.getKey(deployId))) {
-					Thread.sleep(5000); // 5초 대기
+				// 최소 3초 대기 후 결재 완료 될 수 있도록 리턴, 끝날 때까지 대기하면 트랜잭션이 길어져서 문제 발생 소지가 있음
+				if(batchService.isScheduled(batchService.getKey(deployId))) {
+					Thread.sleep(3000); // 3초 대기
 				}
 			}
 			// 결과판단이 불필요하면 별도의 체크없이 그대로 리턴
