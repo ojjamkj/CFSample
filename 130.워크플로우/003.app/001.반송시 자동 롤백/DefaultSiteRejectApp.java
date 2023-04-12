@@ -1,6 +1,7 @@
 package com.gtone.wfapplication.filters.common.post;
 
 import java.util.HashMap;
+
 import java.util.List;
 
 import com.gtone.cf.rt.deploy.DeployBatchService;
@@ -11,6 +12,14 @@ import com.itplus.wf.def.act.WfactModel;
 
 import jspeed.base.query.DBAssistant;
 import jspeed.websvc.WSParam;
+
+/**
+ * 1. 워크플로우 디자이너
+ * 2. 프로세스 선택
+ * 3. "Modify Process" 버튼 클릭
+ * 4. Process Modification 팝업> Custom Property> REJECT_APP 항목을 현재 클래스로 수정
+ *
+ */
 
 public class DefaultSiteRejectApp extends DefaultRejectApp {
 
