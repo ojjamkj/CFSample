@@ -18,6 +18,6 @@ public class SiteCheckOutToServerRun extends CheckOutToServerRun {
 		super.onEndBeforeCommit(dbAssistant, returnHashMap);
 		
 		
-		SiteUtil.makeFileAndSend(this.instId);
+		SiteUtil.makeFileAndSend(dbAssistant, this.instId);
 	}
 }

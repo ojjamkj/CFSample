@@ -9,7 +9,7 @@ import com.gtone.cf.rt.file.FileTransfer;
 
 public class SiteUtil {
 	
-	public static void makeFileAndSend(BigDecimal instId) throws Exception
+	public static void makeFileAndSend(DBAssistant dbAssistant, BigDecimal instId) throws Exception
 	{
 		
 		HashMap copyMap = new HashMap();

@@ -22,7 +22,7 @@ public class SiteCheckoutCancelRun extends CheckOutCancelRun {
 		
 		//사이트내용
 		
-		SiteUtil.makeFileAndSend(this.instId);
+		SiteUtil.makeFileAndSend(dbAssistant, this.instId);
 	}
 
 }
