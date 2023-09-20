@@ -1,0 +1,23 @@
+	<update id="site_resource_meta_insert_update" >
+	MERGE INTO CF_RESOURCE_META A USING (SELECT #{RES_ID} AS RES_ID, #{GROUP_ID}
+	AS RES_DESC FROM DUAL) B ON (A.RES_ID = B.RES_ID) WHEN MATCHED THEN UPDATE
+	SET A.RES_DESC = B.RES_DESC WHEN NOT MATCHED THEN INSERT (A.RES_ID,
+	A.RES_DESC) VALUES (B.RES_ID, B.RES_DESC)
+	</update>
+	
+	<select id="site_select_user_role" parameterType="hashMap" resultType="ExpressMap">
+	SELECT DISTINCT B.ROLE_NM, B.ROLE_ID FROM C_USER_GROUP_ROLE A, C_ROLE B WHERE
+	A.ROLE_ID = B.ROLE_ID AND A.USER_ID = #{USER_ID}
+	</select>
+	
+	<delete id="site_delete_cf_resource_lock">
+	DELETE FROM CF_RESOURCE_LOCK WHERE RES_ID = #{RES_ID} AND INST_ID = #{INST_ID} AND LOCK_TYPE = 'CR'
+	</delete>
+	
+	<delete id="site_delete_cf_resource_log">
+	DELETE FROM CF_RESOURCE_LOG WHERE RES_ID = #{RES_ID} AND INST_ID = #{INST_ID}
+	</delete>
+	
+	<delete id="site_delete_cf_resource_cr_map">
+	DELETE FROM CF_RESOURCE_CR_MAP WHERE RES_ID = #{RES_ID} AND INST_ID = #{INST_ID}
+	</delete>
