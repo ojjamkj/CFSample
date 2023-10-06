@@ -1,0 +1,51 @@
+1. itpweb.zip 압축해제 후 itpweb/js/se2/js/smarteditor2.js 같은 구조로 위치하게 복사
+
+2. express.properties파일의 FieldTagClass.texteditor부분 주석해제후 수정
+FieldTagClass.texteditor=com.gtone.express.util.tag.impl.SiteTEXTEDITORFieldTag
+
+3. 내용저장을 위한 폼jsp onSubmit 부분 내용 추가
+	{필드명}_oEditors.getById["{필드명}"].exec("UPDATE_CONTENTS_FIELD", []);
+
+ex)
+	function onSubmit(inputFlag){ 
+		frm = document.mainForm;	
+
+		CHANGE_REASON_oEditors.getById["CHANGE_REASON"].exec("UPDATE_CONTENTS_FIELD", []);
+		EXPECTED_EFFECT_oEditors.getById["EXPECTED_EFFECT"].exec("UPDATE_CONTENTS_FIELD", []);
+		
+		//결재버튼 클릭시 
+		if ( "approve" == inputFlag ) { 
+			setFormVal();
+		}
+
+4. 병합 항목 3가지
+
+=========================================================================================================
+
+1) etc/[병합용]header.jsp 참고하여
+itpweb/site/header.jsp 병합
+
+<script type="text/javascript" src="/js/se2/js/service/HuskyEZCreator.js" charset="utf-8"></script>
+
+=========================================================================================================
+
+2) etc/[병합용]style.css 참고하여
+itpweb/site/css/changeflow/style.css 병합
+
+.gt_se2 {
+	width: 100%;
+	height: 300px;
+	display: none;
+}
+
+=========================================================================================================
+
+3) etc/[병합용]tagScriptCommon.js(216 ~ 221) 참고하여
+itpweb/js/changeflow/tagScriptCommon.js 병합
+
+else if(requireObj[i].tagName=="TEXTAREA" && requireObj[i].className=="gt_se2")
+{
+	if (val =="<p><br></p>" || val =="<br>") {
+	  val="";
+	}
+}

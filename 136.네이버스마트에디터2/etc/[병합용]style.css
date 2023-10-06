@@ -1,0 +1,9 @@
+/*
+* @version $Id: style.css,v 1.1 2018/10/25 08:00:59 ojjamkj Exp $
+*/
+
+.gt_se2 {
+	width: 100%;
+	height: 300px;
+	display: none;
+}
