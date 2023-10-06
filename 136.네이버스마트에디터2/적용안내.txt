@@ -6,6 +6,16 @@ FieldTagClass.texteditor=com.gtone.express.util.tag.impl.SiteTEXTEDITORFieldTag
 3. 내용저장을 위한 폼jsp onSubmit 부분 내용 추가
 	{필드명}_oEditors.getById["{필드명}"].exec("UPDATE_CONTENTS_FIELD", []);
 
+	$(".gt_se2").each((index, element)=>{
+		let val = element.value;
+		
+		if (val =="<p><br></p>" || val =="<br>") {
+			val="";
+		}
+		
+		element.value = escapeHtml(val);
+	});
+
 ex)
 	function onSubmit(inputFlag){ 
 		frm = document.mainForm;	
@@ -13,12 +23,22 @@ ex)
 		CHANGE_REASON_oEditors.getById["CHANGE_REASON"].exec("UPDATE_CONTENTS_FIELD", []);
 		EXPECTED_EFFECT_oEditors.getById["EXPECTED_EFFECT"].exec("UPDATE_CONTENTS_FIELD", []);
 		
+		$(".gt_se2").each((index, element)=>{
+			let val = element.value;
+			
+			if (val =="<p><br></p>" || val =="<br>") {
+				val="";
+			}
+			
+			element.value = escapeHtml(val);
+		});
+		
 		//결재버튼 클릭시 
 		if ( "approve" == inputFlag ) { 
 			setFormVal();
 		}
 
-4. 병합 항목 3가지
+4. 병합 항목 2가지
 
 =========================================================================================================
 
@@ -36,16 +56,4 @@ itpweb/site/css/changeflow/style.css 병합
 	width: 100%;
 	height: 300px;
 	display: none;
-}
-
-=========================================================================================================
-
-3) etc/[병합용]tagScriptCommon.js(216 ~ 221) 참고하여
-itpweb/js/changeflow/tagScriptCommon.js 병합
-
-else if(requireObj[i].tagName=="TEXTAREA" && requireObj[i].className=="gt_se2")
-{
-	if (val =="<p><br></p>" || val =="<br>") {
-	  val="";
-	}
 }
