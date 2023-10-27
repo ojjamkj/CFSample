@@ -112,6 +112,16 @@ public class SiteCheckinRun extends CheckInRun {
 
 		try {
 			MCommonDAO dao = new MCommonDAO(this.resourceDAO.getQueryHelper().getConnection());
+			
+			String domaResId=null;
+			for (ResourceBean bean : this.beans) {
+				if (bean.getResName().endsWith(".doma")) {
+					if(StringHelper.evl(bean.getResId(), null) != null) {
+						domaResId = bean.getResId();
+						break;
+					}
+				}
+			}
 
 			HashMap paramMap = new HashMap();
 			for (ResourceBean bean : this.beans) {
@@ -131,6 +141,21 @@ public class SiteCheckinRun extends CheckInRun {
 						 * A.RES_DESC) VALUES (B.RES_ID, B.RES_DESC)
 						 */
 						dao.executeUpdate("site_resource_meta_insert_update", paramMap);
+						
+						// 쿼리 내용 site_cf_src_map_insert_update
+						/*
+						 * MERGE INTO CF_SRC_MAP A 
+							USING (SELECT #{RES_ID} AS SRC_ID, #{DOMA_RES_ID} AS MAP_SRC_ID , 'R' AS MAP_TYPE FROM DUAL) B 
+						  		ON (A.SRC_ID = B.SRC_ID AND A.MAP_SRC_ID = B.MAP_SRC_ID AND A.MAP_TYPE=B.MAP_TYPE) 
+						WHEN NOT MATCHED THEN 
+							INSERT (A.SRC_ID, A.MAP_SRC_ID, A.MAP_TYPE) VALUES (B.SRC_ID, B.MAP_SRC_ID, B.MAP_TYPE)
+						 */
+						//doma-java 맵핑 저장
+						if(domaResId != null)
+						{
+							paramMap.put("DOMA_RES_ID", domaResId);
+							dao.executeUpdate("site_cf_src_map_insert_update", paramMap);
+						}
 					}
 				}
 			}
