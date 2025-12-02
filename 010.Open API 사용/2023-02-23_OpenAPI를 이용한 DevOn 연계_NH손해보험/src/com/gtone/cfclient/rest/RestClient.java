@@ -260,9 +260,8 @@ public class RestClient {
 				*/
 				RequestConfig config = 
 						RequestConfig.custom()
-						.setConnectionRequestTimeout(20 * 1000)
-						.setSocketTimeout(20 * 1000)
-						.setConnectionRequestTimeout(20 * 1000)
+						.setSocketTimeout(30 * 1000)
+						.setConnectionRequestTimeout(60 * 1000)
 						.build();
 				localHttpPost.setConfig(config);
 				
